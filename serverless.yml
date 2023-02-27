@@ -1,0 +1,41 @@
+service: back-apiStockout-api
+# service: api-envia-email-sms
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region:  us-east-1 #us-west-2
+  stage: ${opt:stage}
+  environment:
+
+    PORT: ${param:PORT, ''}
+    AWS_REGIONS: ${param:AWS_REGIONS, ''}
+    SECRET_LOGIN: ${param:SECRET_LOGIN, ''}
+    SECRET_PWD: ${param:SECRET_PWD, ''}
+    SECRET_TOKEN: ${param:SECRET_TOKEN, ''}
+
+    USER_POS: ${param:USER_POS, ''}
+    PASSWORD_POS: ${param:PASSWORD_POS, ''}
+    SERVER_POS: ${param:SERVER_POS, ''}
+    DATABASE_POS: ${param:DATABASE_POS, ''}
+    
+  iam:
+      role: arn:aws:iam::${param:CUENTA_AWS, ''}:${param:API_ROL, ''}
+
+functions:
+  api:
+    handler: app.handler
+    events:
+      - http:
+          method: post
+          path: api/auth/login
+          cors: true
+      - http:
+          method: post
+          path: api/stockout/listarStockOut
+          cors: true
+      
+# plugins:
+#   - serverless-offline
